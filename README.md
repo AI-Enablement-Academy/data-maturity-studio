@@ -1,6 +1,6 @@
 # Data Maturity Studio
 
-Deterministic diagnostics for people analytics maturity, root-cause analysis, and the path to DRL 7.
+Deterministic diagnostics for people analytics maturity, root-cause analysis, and the path to DRL 7, with an optional Groq-backed report assistant.
 
 This project ships two public tools from one shared Next.js codebase:
 
@@ -16,11 +16,12 @@ This project ships two public tools from one shared Next.js codebase:
 
 ## Product principles
 
-- No LLM dependency in v1
+- No LLM dependency for core diagnostics
 - Deterministic scoring and explainable output
 - Root-cause diagnosis before maturity labeling
 - Use-case mode as the default, organization mode as directional
 - Exportable artifacts instead of generic dashboard filler
+- Optional AI assist must never override deterministic scores
 
 ## Routes
 
@@ -51,7 +52,7 @@ pnpm build
 
 ## Hosting
 
-This project is now intended for Vercel deployment.
+This project is intended for Vercel deployment.
 
 Why:
 - the app now includes a server-side Groq chat route
@@ -68,13 +69,14 @@ GROQ_MODEL=qwen/qwen3-32b
 
 For local development, put them in `.env.local`.
 For production, set them in the Vercel project environment settings.
+Do not commit `.env.local` or any real provider key.
 
 ### Groq integration
 
 - Provider docs: [Groq Docs](https://console.groq.com/docs/overview)
 - API base URL: `https://api.groq.com/openai/v1`
 - Model: `qwen/qwen3-32b`
-- The app handles `429 Too Many Requests` responses by surfacing a retry countdown and keeping a deterministic non-AI chat mode available.
+- The app handles `429 Too Many Requests` responses by surfacing a retry countdown and switching the user to deterministic mode so the workflow can continue.
 
 ## Architecture
 
@@ -88,9 +90,13 @@ For production, set them in the Vercel project environment settings.
   - deterministic evidence parsing and confidence modifiers
 - `src/lib/diagnostics/engine.ts`
   - severity scoring, confidence, DRL banding, action plan composition
+- `src/lib/diagnostics/deterministic-chat.ts`
+  - browser-only fallback assistant based on the report model
+- `src/app/api/chat/route.ts`
+  - server-side Groq integration for optional AI assist
 - `src/components/diagnostics/*`
   - shared product UI, wizard flow, and results rendering
 
 ## Open source
 
-This repository is intended to be public and openly inspectable. The scoring model is deterministic by design, so users can challenge, inspect, and improve the logic without depending on a black-box AI layer.
+This repository is intended to be public and openly inspectable. The scoring model is deterministic by design, so users can challenge, inspect, and improve the logic without depending on a black-box AI layer. The optional assistant runs through server-side env configuration only, so no provider secrets are exposed in the client bundle.
