@@ -16,6 +16,8 @@ The suite must use one shared codebase, deterministic scoring, and optional serv
 - Vercel-oriented server-side Groq chat integration implemented
 - Deterministic browser-only chat fallback implemented
 - Rate-limit countdown and auto-fallback to deterministic mode implemented
+- Results-page local-storage hydration bug fixed
+- Live Playwright validation completed for DMM flow, DRL flow, exports, print trigger, deterministic chat, AI chat, and rate-limit fallback behavior
 - Domain tests passing
 - Production build passing
 
