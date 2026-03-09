@@ -9,6 +9,17 @@ interface ChatMessage {
   content: string;
 }
 
+interface GroqResponsePayload {
+  output?: Array<{
+    type?: string;
+    content?: Array<{
+      type?: string;
+      text?: string;
+    }>;
+  }>;
+  output_text?: string;
+}
+
 function getRetryAfterSeconds(response: Response) {
   const retryHeader = response.headers.get("retry-after");
   if (!retryHeader) {
@@ -53,6 +64,21 @@ function buildContext(session: AssessmentSession) {
   };
 }
 
+function extractOutputText(payload: GroqResponsePayload) {
+  if (payload.output_text) {
+    return payload.output_text;
+  }
+
+  const parts =
+    payload.output
+      ?.flatMap((item) => item.content ?? [])
+      .filter((item) => item.type === "output_text")
+      .map((item) => item.text?.trim())
+      .filter((item): item is string => Boolean(item)) ?? [];
+
+  return parts.join("\n\n");
+}
+
 export async function POST(request: NextRequest) {
   const apiKey = process.env.GROQ_API_KEY;
   const model = process.env.GROQ_MODEL ?? "qwen/qwen3-32b";
@@ -88,6 +114,8 @@ export async function POST(request: NextRequest) {
     },
     body: JSON.stringify({
       model,
+      temperature: 0.2,
+      max_output_tokens: 350,
       instructions: `You are the assistant inside a data maturity diagnostic product. Use only the supplied diagnostic context. Be concise, practical, and specific. Do not invent data or scores. If the user asks something outside the supplied context, say that clearly and steer them back to the report.\n\nDiagnostic context:\n${JSON.stringify(
         context,
         null,
@@ -126,9 +154,9 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const payload = (await response.json()) as { output_text?: string };
+  const payload = (await response.json()) as GroqResponsePayload;
   return NextResponse.json({
-    output: payload.output_text ?? "No response text was returned by the provider.",
+    output: extractOutputText(payload) || "No response text was returned by the provider.",
     model,
   });
 }
