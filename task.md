@@ -18,6 +18,7 @@ The suite must use one shared codebase, deterministic scoring, and optional serv
 - Rate-limit countdown and auto-fallback to deterministic mode implemented
 - Results-page local-storage hydration bug fixed
 - Live Playwright validation completed for DMM flow, DRL flow, exports, print trigger, deterministic chat, AI chat, and rate-limit fallback behavior
+- Root-condition wording and DRL threshold language aligned against the October 2025 white paper source text
 - Domain tests passing
 - Production build passing
 
