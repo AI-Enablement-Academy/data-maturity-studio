@@ -50,6 +50,7 @@
 ## Current test coverage
 - domain tests for scoring, evidence parsing, and deterministic chat
 - live Playwright validation on the Vercel deployment for DMM and DRL public flows
+- source-alignment pass against the October 2025 white paper for Ten Root Conditions, DRL 1-7 language, and DPM / TDQM framing
 
 ## Validation commands
 - `pnpm test`
