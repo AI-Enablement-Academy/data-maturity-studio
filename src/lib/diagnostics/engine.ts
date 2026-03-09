@@ -91,7 +91,7 @@ function getRootConditionScores(input: AssessmentInput, evidenceSummary: ResultM
       explanation:
         score === 0
           ? `Current answers do not show a material issue in ${condition.title.toLowerCase()}.`
-          : `${condition.summary} Evidence points most strongly to ${contributingQuestions.join(", ").toLowerCase() || "the supplied evidence"}. ${condition.drl7Expectation}`,
+          : `${condition.summary} This diagnostic points most strongly to ${contributingQuestions.join(", ").toLowerCase() || "the supplied evidence"} as the pressure points in this workflow. ${condition.drl7Expectation}`,
     };
   }
 
@@ -166,7 +166,7 @@ function getDRLBand(
     return {
       band: "Emerging DRL 8-9",
       summary:
-        "This workflow shows emerging signs of advanced AI integration built on structured, governed data products.",
+        "These levels represent emerging capabilities where automated structured collection integrates directly with AI systems to enable prescriptive and cognitive analytics.",
       whyNotHigher,
       thresholdNotes,
     };
@@ -180,12 +180,12 @@ function getDRLBand(
     maxCriticalBlocker <= 1
   ) {
     thresholdNotes.push(
-      "The workflow demonstrates data-as-product behavior, named ownership, measurable quality discipline, and structured AI readiness.",
+      "Information Product principles, DPM coordination, TDQM discipline, and structured AI readiness are all materially present.",
     );
     return {
       band: "DRL 7",
       summary:
-        "This workflow has the core structural ingredients of the strategic product breakthrough described in the handbook.",
+        "DRL 7 is the strategic product breakthrough where data collection is intentionally designed to support AI consumption rather than hoping AI can overcome collection deficiencies.",
       whyNotHigher: signalScores.advanced_ai_integration < 2
         ? ["Advanced AI integration remains limited, which keeps the workflow below emerging DRL 8-9."]
         : [],
@@ -206,7 +206,7 @@ function getDRLBand(
     return {
       band: "DRL 1-2",
       summary:
-        "The workflow still behaves like a manual collection foundation rather than a dependable digital data product.",
+        "Organisations at DRL 1-2 rely on manual data gathering through spreadsheets, emails, and basic forms. Quality management is reactive and the data lacks the reliability and structure AI requires.",
       whyNotHigher: [
         "Digital collection and storage are not yet stable enough for DRL 3-4.",
         ...whyNotHigher,
@@ -227,7 +227,7 @@ function getDRLBand(
     return {
       band: "DRL 3-4",
       summary:
-        "The workflow has basic digital collection infrastructure, but still depends on by-product data and manual preparation.",
+        "These levels represent basic digital collection and storage with some quality controls, but data is still collected as a by-product of business processes rather than designed for analytical consumption.",
       whyNotHigher: [
         "The workflow lacks enough integration strength and product discipline for DRL 5-6 or above.",
         ...whyNotHigher,
@@ -242,9 +242,9 @@ function getDRLBand(
   return {
     band: "DRL 5-6",
     summary:
-      "The workflow likely operates in the common DRL 5-6 plateau: digitally enabled, somewhat integrated, but not designed for AI consumption.",
+      "Most organisations operate in the DRL 5-6 plateau: high-volume data collection and some machine learning support descriptive and diagnostic analytics, but the underlying data still behaves as a by-product rather than something designed for AI consumption.",
     whyNotHigher: [
-      "Data-as-product discipline, DPM ownership, TDQM discipline, or structured AI readiness are not yet strong enough for DRL 7.",
+      "Information Product discipline, DPM coordination, TDQM discipline, or structured AI readiness are not yet strong enough for DRL 7.",
       ...whyNotHigher,
     ],
     thresholdNotes,
@@ -302,13 +302,13 @@ function getGapToDRL7(
 ) {
   const gaps: string[] = [];
   if (signalScores.data_product_discipline < 2.2) {
-    gaps.push("The workflow is not yet designed and governed as an information product.");
+    gaps.push("The workflow is not yet designed and governed as an Information Product or Data-as-a-Product asset.");
   }
   if (signalScores.dpm_ownership < 2) {
-    gaps.push("Named cross-functional ownership is not yet strong enough for DRL 7.");
+    gaps.push("Data-as-a-Product Manager (DPM) coordination is not yet strong enough for DRL 7.");
   }
   if (signalScores.tdqm_discipline < 2) {
-    gaps.push("Quality measurement and remediation are not yet systematic enough for DRL 7.");
+    gaps.push("TDQM-style quality measurement and remediation are not yet systematic enough for DRL 7.");
   }
   if (signalScores.structured_ai_readiness < 2.2) {
     gaps.push("The current data structure still requires too much recoding, caveat writing, or translation for AI use.");
